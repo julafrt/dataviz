@@ -9,7 +9,6 @@ st.set_page_config(
 )
 
 st.title('Spotify Song Analysis Overview')
-streamlit run project.py
 
 
 @st.cache_data
@@ -151,7 +150,7 @@ def plot_top_songs(top_range=(0, 25), x_axis='energy_%', y_axis='danceability_%'
 
 spotify_filtered = get_data()
 
-  
+
 # Add panel
 songs_count_selector = pn.widgets.IntRangeSlider(name='Top Songs', start=0, end=100, step=5, value=(0,25))
 x_axis = pn.widgets.Select(name='X-Axis', value='energy_%', width=200,
