@@ -149,25 +149,8 @@ def main():
     y_axis = st.selectbox('Y-Axis', ['danceability_%', 'valence_%', 'energy_%'], key='y_axis')
 
     # Display Charts
-    col1, col2, col3, col4, col5, col6 = st.columns(6)
-
-    with col1:
-        st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis)[0], use_container_width=True)
-
-    with col2:
-        st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis)[1], use_container_width=True)
-
-    with col3:
-        st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis)[2], use_container_width=True)
-
-    with col4:
-        st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis)[3], use_container_width=True)
-
-    with col5:
-        st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis)[4], use_container_width=True)
-
-    with col6:
-        st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis)[5], use_container_width=True)
+    for plot in plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis):
+        st.altair_chart(plot, use_container_width=True)
 
 if __name__ == "__main__":
     main()
