@@ -14,7 +14,7 @@ def get_data():
     spotify_filtered.loc[:, 'in_deezer_playlists'] = spotify_filtered['in_deezer_playlists'].str.replace(',', '').astype(int)
     spotify_filtered = spotify_filtered.sort_values('streams', ascending=False)
     spotify_filtered = spotify_filtered.head(100)
-  return spotify_filtered
+    return spotify_filtered
 
 # Chart Creation
 def plot_top_songs(top_range=(0, 25), x_axis='energy_%', y_axis='danceability_%'):
@@ -133,7 +133,7 @@ def plot_top_songs(top_range=(0, 25), x_axis='energy_%', y_axis='danceability_%'
         height=400,
         title='Mode Distribution'
     ).transform_filter(selection).transform_filter(selection2)
-  return chart | platform | modes | pie_chart | scatter_base | dots
+    return chart | platform | modes | pie_chart | scatter_base | dots
 
 # Main App
 def main():
