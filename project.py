@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 
+# Data Acquisition
+@st.cache_data
 def get_data():
     url="https://tinyurl.com/y822sfzy"
     df = pd.read_csv("https://tinyurl.com/y822sfzy", encoding='latin-1')
@@ -12,7 +14,7 @@ def get_data():
     spotify_filtered.loc[:, 'in_deezer_playlists'] = spotify_filtered['in_deezer_playlists'].str.replace(',', '').astype(int)
     spotify_filtered = spotify_filtered.sort_values('streams', ascending=False)
     spotify_filtered = spotify_filtered.head(100)
-    return spotify_filtered
+  return spotify_filtered
 
 # Chart Creation
 def plot_top_songs(top_range=(0, 25), x_axis='energy_%', y_axis='danceability_%'):
@@ -102,7 +104,7 @@ def plot_top_songs(top_range=(0, 25), x_axis='energy_%', y_axis='danceability_%'
         x=alt.X('count(key):N',
                 title='Nb of songs',
                 sort=alt.SortOrder('descending'), scale=alt.Scale(domain=[0, max_dim])),
-        color=alt.Color('count(mode):N',legend=None),
+        color='count(mode):N',
         tooltip=['mode:N', 'key:N', 'count(mode):N']
     ).mark_bar().properties(title='Minor')
 
@@ -131,29 +133,26 @@ def plot_top_songs(top_range=(0, 25), x_axis='energy_%', y_axis='danceability_%'
         height=400,
         title='Mode Distribution'
     ).transform_filter(selection).transform_filter(selection2)
-
-    return (chart | platform) & (modes | pie_chart) & (scatter_base | dots)
+  return chart | platform | modes | pie_chart | scatter_base | dots
 
 # Main App
 def main():
-    st.set_page_config(
-        page_title="Top 100 Spotify Music Analysis", page_icon="⬇", layout="centered"
-    )
-    st.title('Spotify Song Analysis Overview')
+  st.set_page_config(
+      page_title="Top 100 Spotify Musics Analysis", page_icon="⬇", layout="centered"
+  )
+  st.title('Spotify Song Analysis Overview')
 
-    # Data Acquisition
-    spotify_filtered = get_data()
+  # Data Acquisition
+  spotify_filtered = get_data()
 
-    # Interactive Controls
-    songs_count_selector = st.slider('Top Songs', 0, 100, (0, 25), key='top_songs')
-    x_axis = st.selectbox('X-Axis', ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'instrumentalness_%', 'liveness_%', 'speechiness_%'], key='x_axis')
-    y_axis = st.selectbox('Y-Axis', ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'instrumentalness_%', 'liveness_%', 'speechiness_%'], key='y_axis')
+  # Interactive Controls
+  songs_count_selector = st.slider('Top Songs', 0, 100, (0, 25), key='top_songs')
+  x_axis = st.selectbox('X-Axis', ['danceability_%', 'valence_%', ...], key='x_axis')
+  y_axis = st.selectbox('Y-Axis', ['danceability_%', 'valence_%', ...], key='y_axis')
 
-    # Display Charts
-    st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis), use_container_width=True)
+  # Display Charts
+  st.altair_chart(plot_top_songs(songs_count_selector, x_axis, y_axis), use_container_width=True)
+  # You can add more charts here using st.altair_chart
 
 if __name__ == "__main__":
-    main()
-
-
-    
+  main()
