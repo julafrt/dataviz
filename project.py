@@ -30,8 +30,8 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
         color=alt.condition(selection, alt.value('darkgreen'), alt.value('lightgray')),
         tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), 'streams:Q', alt.Tooltip('in_spotify_playlists:Q', title='In Spotify Playlists')]
     ).properties(
-        width=300,
-        height=300,
+        width=250,
+        height=500,
         title=f'Top {max_range} Songs Streaming Ranking'
     ).add_selection(selection).transform_filter(selection2)
 
@@ -41,8 +41,8 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
         color=alt.condition(selection, alt.value('darkgreen'), alt.value('lightgray')),
         tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), alt.Tooltip(x_axis + ':Q', title=x_axis.replace('_', ' ').title()), alt.Tooltip(y_axis + ':Q', title=y_axis.replace('_', ' ').title()), 'streams:Q']
     ).properties(
-        width=300,
-        height=300,
+        width=250,
+        height=250,
         title='Song Analysis'
     ).add_selection(selection2)
 
@@ -55,7 +55,7 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
         color=alt.condition(selection, alt.value('darkgreen'), alt.value('lightgray')),
         tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), alt.Tooltip('Value:Q', title='Metric'), 'streams:Q']
     ).properties(
-        width=400,
+        width=350,
         height=200
     )
 
@@ -82,16 +82,16 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
             ), alt.value('lightgray')
         )
     ).properties(
-        width=300,
-        height=300,
+        width=250,
+        height=500,
         title='Importance of Platforms for Songs'
     ).transform_filter(selection2).add_selection(selection)    
 
     base = alt.Chart(top_n_songs).transform_calculate(
         mode=alt.expr.if_(alt.datum.mode == 'Minor', 'Minor', 'Major')
     ).properties(
-        width=300,
-        height=300
+        width=200,
+        height=250
     )
 
     left = base.transform_filter(
@@ -108,7 +108,7 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
     middle = base.encode(
         y=alt.Y('key:N', axis=None),
         text=alt.Text('key:N'),
-    ).mark_text().properties(width=25)
+    ).mark_text().properties(width=15)
 
     right = base.transform_filter(
         alt.datum.mode == 'Major'
@@ -127,8 +127,8 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
         color=alt.Color('mode:N', scale=alt.Scale(domain=['Major', 'Minor'], range=['darkgreen', 'dimgray'])),
         tooltip=['mode:N', 'count(mode):N']
     ).properties(
-        width=300,
-        height=300,
+        width=250,
+        height=250,
         title='Mode Distribution'
     ).transform_filter(selection).transform_filter(selection2)
 
@@ -147,7 +147,7 @@ def main():
     # Interactive Controls
     songs_count_selector = st.slider('Top Songs', 0, 100, (0, 25), key='top_songs')
     x_axis = st.selectbox('X-Axis', ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%'], key='x_axis')
-    y_axis = st.selectbox('Y-Axis', ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%'], key='y_axis')
+    y_axis = st.selectbox('Y-Axis', ['valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%','danceability_%'], key='y_axis')
 
     # Display Charts
     st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis), use_container_width=True)
