@@ -64,17 +64,17 @@ def plot_analysis_and_metrics(spotify_filtered, top_range=(0, 25),x_axis='energy
     top_n_songs = spotify_filtered.iloc[min_range:max_range]
     selection = alt.selection_multi(fields=['track_name'])
     selection2 = alt.selection_interval()
-    scatter_base = alt.Chart(spotify_filtered).mark_circle().encode(
+    scatter_base = alt.Chart(top_n_songs).mark_circle().encode(
         x=alt.X(x_axis + ':Q', title=x_axis.replace('_', ' ').title()),
         y=alt.Y(y_axis + ':Q', title=y_axis.replace('_', ' ').title()),
         tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), alt.Tooltip(x_axis + ':Q', title=x_axis.replace('_', ' ').title()), alt.Tooltip(y_axis + ':Q', title=y_axis.replace('_', ' ').title()), 'streams:Q']
     ).properties(
-        width=500,
-        height=500,
+        width=300,
+        height=300,
         title='Song Analysis'
     )
 
-    dots = alt.Chart(spotify_filtered).transform_fold(
+    dots = alt.Chart(top_n_songs).transform_fold(
         ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%'],
         as_=['Metric', 'Value']
     ).mark_circle().encode(
@@ -82,7 +82,7 @@ def plot_analysis_and_metrics(spotify_filtered, top_range=(0, 25),x_axis='energy
         y=alt.Y('Metric:N', title=None, sort='-x'),
         tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), alt.Tooltip('Value:Q', title='Metric'), 'streams:Q']
     ).properties(
-        width=500,
+        width=250,
         height=250
     )
 
@@ -93,10 +93,10 @@ def plot_mode_distribution_and_pie_chart(spotify_filtered, top_range=(0, 25)):
     top_n_songs = spotify_filtered.iloc[min_range:max_range]
     selection = alt.selection_multi(fields=['track_name'])
     selection2 = alt.selection_interval()
-    base = alt.Chart(spotify_filtered).transform_calculate(
+    base = alt.Chart(top_n_songs).transform_calculate(
         mode=alt.expr.if_(alt.datum.mode == 'Minor', 'Minor', 'Major')
     ).properties(
-        width=300,
+        width=200,
         height=300
     )
 
@@ -107,14 +107,14 @@ def plot_mode_distribution_and_pie_chart(spotify_filtered, top_range=(0, 25)):
         x=alt.X('count(key):N',
                 title='Nb of Songs',
                 sort=alt.SortOrder('descending')),
-        color='count(mode):N',
+        color=alt.Color('count(mode):N',legend=None),
         tooltip=['mode:N', 'key:N', 'count(mode):N']
     ).mark_bar().properties(title='Minor')
 
     middle = base.encode(
         y=alt.Y('key:N', axis=None),
         text=alt.Text('key:N'),
-    ).mark_text().properties(width=40)
+    ).mark_text().properties(width=35)
 
     right = base.transform_filter(
         alt.datum.mode == 'Major'
@@ -127,13 +127,13 @@ def plot_mode_distribution_and_pie_chart(spotify_filtered, top_range=(0, 25)):
 
     modes = left | middle | right
 
-    pie_chart = alt.Chart(spotify_filtered).mark_arc().encode(
+    pie_chart = alt.Chart(top_n_songs).mark_arc().encode(
         theta='count(mode):N',
         color=alt.Color('mode:N', scale=alt.Scale(domain=['Major', 'Minor'], range=['darkgreen', 'dimgray'])),
         tooltip=['mode:N', 'count(mode):N']
     ).properties(
-        width=400,
-        height=400,
+        width=300,
+        height=300,
         title='Mode Distribution'
     )
 
