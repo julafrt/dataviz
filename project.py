@@ -57,7 +57,7 @@ def plot_ranking_and_platforms(spotify_filtered, top_range=(0, 25)):
         title='Importance of Platforms for Songs'
     ).transform_filter(selection2).add_selection(selection)    
 
-    return chart, platform
+    return chart | platform
 
 def plot_analysis_and_metrics(spotify_filtered, top_range=(0, 25),x_axis='energy_%', y_axis='danceability_%'):
     min_range, max_range = top_range
@@ -86,7 +86,7 @@ def plot_analysis_and_metrics(spotify_filtered, top_range=(0, 25),x_axis='energy
         height=250
     )
 
-    return scatter_base, dots
+    return scatter_base | dots
 
 def plot_mode_distribution_and_pie_chart(spotify_filtered, top_range=(0, 25)):
     min_range, max_range = top_range
@@ -125,7 +125,7 @@ def plot_mode_distribution_and_pie_chart(spotify_filtered, top_range=(0, 25)):
         tooltip=['mode:N', 'key:N', 'count(mode):N']
     ).mark_bar().properties(title='Major')
 
-    modes = alt.concat(left, middle, right, spacing=5)
+    modes = left | middle | right
 
     pie_chart = alt.Chart(spotify_filtered).mark_arc().encode(
         theta='count(mode):N',
@@ -137,7 +137,7 @@ def plot_mode_distribution_and_pie_chart(spotify_filtered, top_range=(0, 25)):
         title='Mode Distribution'
     )
 
-    return modes, pie_chart
+    return modes | pie_chart
 
 # Main App
 def main():
@@ -155,17 +155,12 @@ def main():
     y_axis = st.selectbox('Y-Axis', ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'instrumentalness_%', 'liveness_%', 'speechiness_%'], key='y_axis')
 
     # Display Charts
-    ranking_chart, platform_chart = plot_ranking_and_platforms(spotify_filtered, songs_count_selector)
-    st.altair_chart(ranking_chart, use_container_width=True)
-    st.altair_chart(platform_chart, use_container_width=True)
+    
+    st.altair_chart(plot_ranking_and_platforms(spotify_filtered, songs_count_selector), use_container_width=False)
 
-    analysis_chart, metrics_chart = plot_analysis_and_metrics(spotify_filtered, songs_count_selector, x_axis, y_axis)
-    st.altair_chart(analysis_chart, use_container_width=True)
-    st.altair_chart(metrics_chart, use_container_width=True)
+    st.altair_chart(plot_analysis_and_metrics(spotify_filtered, songs_count_selector, x_axis, y_axis), use_container_width=True)
 
-    modes_chart, pie_chart = plot_mode_distribution_and_pie_chart(spotify_filtered, songs_count_selector)
-    st.altair_chart(modes_chart, use_container_width=True)
-    st.altair_chart(pie_chart, use_container_width=True)
+    st.altair_chart(plot_mode_distribution_and_pie_chart(spotify_filtered, songs_count_selector), use_container_width=True)
 
 if __name__ == "__main__":
     main()
