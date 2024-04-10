@@ -150,7 +150,7 @@ def main():
     y_axis = st.selectbox('Y-Axis', ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%'], key='y_axis')
 
     # Display Charts
-    st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis), use_container_width=False)
+    st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis), use_container_width=True)
 
 if __name__ == "__main__":
     main()
