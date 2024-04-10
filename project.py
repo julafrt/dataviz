@@ -137,9 +137,9 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
 # Main App
 def main():
     st.set_page_config(
-        page_title="Top 100 Spotify Music Analysis", page_icon="⬇", layout="centered"
+        page_title="Top 100 Spotify Music Analysis", page_icon="🎵", layout="centered"
     )
-    st.title('Spotify Song Analysis Overview')
+    st.title('Top 100 Spotify Music Analysis')
 
     # Data Acquisition
     spotify_filtered = get_data()
