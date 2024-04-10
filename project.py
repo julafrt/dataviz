@@ -13,7 +13,7 @@ st.title('Spotify Song Analysis Overview')
 
 @st.cache_data
 def get_data():
-    url = "https://tinyurl.com/y822sfzy"
+	url="https://tinyurl.com/y822sfzy"
 	df = pd.read_csv("https://tinyurl.com/y822sfzy", encoding='latin-1')
 	spotify_cleaned = df.dropna()
 	spotify_filtered = spotify_cleaned.loc[spotify_cleaned['streams'].str.isnumeric(), :]
@@ -22,10 +22,8 @@ def get_data():
 	spotify_filtered.loc[:, 'in_deezer_playlists'] = spotify_filtered['in_deezer_playlists'].str.replace(',', '').astype(int)
 	spotify_filtered = spotify_filtered.sort_values('streams', ascending=False)
 	spotify_filtered = spotify_filtered.head(100)
-    return spotify_filtered
-
-
-
+	return spotify_filtered
+ 	
 
 
 def plot_top_songs(top_range=(0, 25), x_axis='energy_%', y_axis='danceability_%'):
