@@ -14,7 +14,7 @@ def get_data():
     spotify_filtered = spotify_filtered.head(100)
     return spotify_filtered
 
-def plot_top_songs_ranking(spotify_filtered, top_range=(0, 25)):
+def plot_ranking_and_platforms(spotify_filtered, top_range=(0, 25)):
     min_range, max_range = top_range
     top_n_songs = spotify_filtered.iloc[min_range:max_range]
 
@@ -32,38 +32,7 @@ def plot_top_songs_ranking(spotify_filtered, top_range=(0, 25)):
         title=f'Top {max_range} Songs Streaming Ranking'
     ).add_selection(selection).transform_filter(selection2)
 
-    return chart
-
-def plot_song_analysis(spotify_filtered, x_axis='energy_%', y_axis='danceability_%'):
-    scatter_base = alt.Chart(spotify_filtered).mark_circle().encode(
-        x=alt.X(x_axis + ':Q', title=x_axis.replace('_', ' ').title()),
-        y=alt.Y(y_axis + ':Q', title=y_axis.replace('_', ' ').title()),
-        tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), alt.Tooltip(x_axis + ':Q', title=x_axis.replace('_', ' ').title()), alt.Tooltip(y_axis + ':Q', title=y_axis.replace('_', ' ').title()), 'streams:Q']
-    ).properties(
-        width=500,
-        height=500,
-        title='Song Analysis'
-    )
-
-    return scatter_base
-
-def plot_song_metrics(spotify_filtered):
-    dots = alt.Chart(spotify_filtered).transform_fold(
-        ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%'],
-        as_=['Metric', 'Value']
-    ).mark_circle().encode(
-        x=alt.X('Value:Q', title='Value'),
-        y=alt.Y('Metric:N', title=None, sort='-x'),
-        tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), alt.Tooltip('Value:Q', title='Metric'), 'streams:Q']
-    ).properties(
-        width=500,
-        height=250
-    )
-
-    return dots
-
-def plot_platform_importance(spotify_filtered):
-    platform = alt.Chart(spotify_filtered).mark_bar().transform_fold(
+    platform = alt.Chart(top_n_songs).mark_bar().transform_fold(
         ['in_spotify_playlists', 'in_apple_playlists', 'in_deezer_playlists'],
         as_=['Metric', 'Value']
     ).encode(
@@ -86,11 +55,36 @@ def plot_platform_importance(spotify_filtered):
         width=500,
         height=500,
         title='Importance of Platforms for Songs'
+    ).transform_filter(selection2).add_selection(selection)    
+
+    return chart, platform
+
+def plot_analysis_and_metrics(spotify_filtered, x_axis='energy_%', y_axis='danceability_%'):
+    scatter_base = alt.Chart(spotify_filtered).mark_circle().encode(
+        x=alt.X(x_axis + ':Q', title=x_axis.replace('_', ' ').title()),
+        y=alt.Y(y_axis + ':Q', title=y_axis.replace('_', ' ').title()),
+        tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), alt.Tooltip(x_axis + ':Q', title=x_axis.replace('_', ' ').title()), alt.Tooltip(y_axis + ':Q', title=y_axis.replace('_', ' ').title()), 'streams:Q']
+    ).properties(
+        width=500,
+        height=500,
+        title='Song Analysis'
     )
 
-    return platform
+    dots = alt.Chart(spotify_filtered).transform_fold(
+        ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%'],
+        as_=['Metric', 'Value']
+    ).mark_circle().encode(
+        x=alt.X('Value:Q', title='Value'),
+        y=alt.Y('Metric:N', title=None, sort='-x'),
+        tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), alt.Tooltip('Value:Q', title='Metric'), 'streams:Q']
+    ).properties(
+        width=500,
+        height=250
+    )
 
-def plot_mode_distribution(spotify_filtered):
+    return scatter_base, dots
+
+def plot_mode_distribution_and_pie_chart(spotify_filtered):
     base = alt.Chart(spotify_filtered).transform_calculate(
         mode=alt.expr.if_(alt.datum.mode == 'Minor', 'Minor', 'Major')
     ).properties(
@@ -125,9 +119,6 @@ def plot_mode_distribution(spotify_filtered):
 
     modes = alt.concat(left, middle, right, spacing=5)
 
-    return modes
-
-def plot_mode_pie_chart(spotify_filtered):
     pie_chart = alt.Chart(spotify_filtered).mark_arc().encode(
         theta='count(mode):N',
         color=alt.Color('mode:N', scale=alt.Scale(domain=['Major', 'Minor'], range=['darkgreen', 'dimgray'])),
@@ -138,7 +129,7 @@ def plot_mode_pie_chart(spotify_filtered):
         title='Mode Distribution'
     )
 
-    return pie_chart
+    return modes, pie_chart
 
 # Main App
 def main():
@@ -156,12 +147,17 @@ def main():
     y_axis = st.selectbox('Y-Axis', ['danceability_%', 'valence_%', 'energy_%'], key='y_axis')
 
     # Display Charts
-    st.altair_chart(plot_top_songs_ranking(spotify_filtered, songs_count_selector), use_container_width=True)
-    st.altair_chart(plot_song_analysis(spotify_filtered, x_axis, y_axis), use_container_width=True)
-    st.altair_chart(plot_song_metrics(spotify_filtered), use_container_width=True)
-    st.altair_chart(plot_platform_importance(spotify_filtered), use_container_width=True)
-    st.altair_chart(plot_mode_distribution(spotify_filtered), use_container_width=True)
-    st.altair_chart(plot_mode_pie_chart(spotify_filtered), use_container_width=True)
+    ranking_chart, platform_chart = plot_ranking_and_platforms(spotify_filtered, songs_count_selector)
+    st.altair_chart(ranking_chart, use_container_width=True)
+    st.altair_chart(platform_chart, use_container_width=True)
+
+    analysis_chart, metrics_chart = plot_analysis_and_metrics(spotify_filtered, x_axis, y_axis)
+    st.altair_chart(analysis_chart, use_container_width=True)
+    st.altair_chart(metrics_chart, use_container_width=True)
+
+    modes_chart, pie_chart = plot_mode_distribution_and_pie_chart(spotify_filtered)
+    st.altair_chart(modes_chart, use_container_width=True)
+    st.altair_chart(pie_chart, use_container_width=True)
 
 if __name__ == "__main__":
     main()
