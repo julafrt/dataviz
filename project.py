@@ -134,7 +134,7 @@ def plot_mode_distribution_and_pie_chart(spotify_filtered):
 # Main App
 def main():
     st.set_page_config(
-        page_title="Top 100 Spotify Music Analysis", page_icon="⬇", layout="centered"
+        page_title="Top 100 Spotify Music Analysis", page_icon="🎵", layout="centered"
     )
     st.title('Spotify Song Analysis Overview')
 
