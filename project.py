@@ -119,7 +119,8 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
         tooltip=['mode:N', 'key:N', 'count(mode):N']
     ).mark_bar().properties(title='Major')
 
-    modes = alt.concat(left, middle, right, spacing=5).transform_filter(selection2).transform_filter(selection)
+    modes = left| middle| right
+    modes = modes.transform_filter(selection2).transform_filter(selection)
 
     pie_chart = alt.Chart(top_n_songs).mark_arc().encode(
         theta='count(mode):N',
@@ -149,7 +150,7 @@ def main():
     y_axis = st.selectbox('Y-Axis', ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%'], key='y_axis')
 
     # Display Charts
-    st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis), use_container_width=True)
+    st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis), use_container_width=False)
 
 if __name__ == "__main__":
     main()
