@@ -1,16 +1,8 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import altair as alt
-import panel as pn
 
-st.set_page_config(
-    page_title="Top 100 Spotify Musics Analysis", page_icon="⬇", layout="centered"
-)
-
-st.title('Spotify Song Analysis Overview')
-
-
+# Data Acquisition
 @st.cache_data
 def get_data():
 	url="https://tinyurl.com/y822sfzy"
@@ -22,12 +14,11 @@ def get_data():
 	spotify_filtered.loc[:, 'in_deezer_playlists'] = spotify_filtered['in_deezer_playlists'].str.replace(',', '').astype(int)
 	spotify_filtered = spotify_filtered.sort_values('streams', ascending=False)
 	spotify_filtered = spotify_filtered.head(100)
-	return spotify_filtered
- 	
+  return spotify_filtered
 
-
+# Chart Creation
 def plot_top_songs(top_range=(0, 25), x_axis='energy_%', y_axis='danceability_%'):
-    min_range, max_range = top_range
+  	min_range, max_range = top_range
     range = max_range - min_range
     max_dim = range/6
     top_n_songs = spotify_filtered.iloc[min_range:max_range]
@@ -142,28 +133,26 @@ def plot_top_songs(top_range=(0, 25), x_axis='energy_%', y_axis='danceability_%'
         height=400,
         title='Mode Distribution'
     ).transform_filter(selection).transform_filter(selection2)
+  return chart | platform | modes | pie_chart | scatter_base | dots
 
-    return chart | platform | modes | pie_chart | scatter_base | dots
+# Main App
+def main():
+  st.set_page_config(
+      page_title="Top 100 Spotify Musics Analysis", page_icon="⬇", layout="centered"
+  )
+  st.title('Spotify Song Analysis Overview')
 
+  # Data Acquisition
+  spotify_filtered = get_data()
 
-spotify_filtered = get_data()
+  # Interactive Controls
+  songs_count_selector = st.slider('Top Songs', 0, 100, (0, 25), key='top_songs')
+  x_axis = st.selectbox('X-Axis', ['danceability_%', 'valence_%', ...], key='x_axis')
+  y_axis = st.selectbox('Y-Axis', ['danceability_%', 'valence_%', ...], key='y_axis')
 
+  # Display Charts
+  st.altair_chart(plot_top_songs(songs_count_selector, x_axis, y_axis), use_container_width=True)
+  # You can add more charts here using st.altair_chart
 
-# Add panel
-songs_count_selector = pn.widgets.IntRangeSlider(name='Top Songs', start=0, end=100, step=5, value=(0,25))
-x_axis = pn.widgets.Select(name='X-Axis', value='energy_%', width=200,
-                           options=['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'instrumentalness_%', 'liveness_%', 'speechiness_%'])
-
-y_axis = pn.widgets.Select(name='Y-Axis', value='danceability_%', width=200,
-                           options=['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'instrumentalness_%', 'liveness_%', 'speechiness_%'])
-
-
-
-# Define plot
-@pn.depends(top_range=songs_count_selector.param.value, x_axis=x_axis.param.value, y_axis=y_axis.param.value)
-def update_plot(top_range,x_axis, y_axis):
-    min_range, max_range = top_range
-    return plot_top_songs((min_range, max_range), x_axis, y_axis)
-
-# Print panel
-pn.Column(pn.Row(songs_count_selector, x_axis, y_axis), pn.Row(update_plot)).servable()
+if __name__ == "__main__":
+  main()
