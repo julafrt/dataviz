@@ -63,7 +63,7 @@ def plot_analysis_and_metrics(spotify_filtered, top_range=(0, 25),x_axis='energy
 	min_range, max_range = top_range
 	top_n_songs = spotify_filtered.iloc[min_range:max_range]
 	selection = alt.selection_multi(fields=['track_name'])
-    selection2 = alt.selection_interval()
+	selection2 = alt.selection_interval()
     scatter_base = alt.Chart(spotify_filtered).mark_circle().encode(
         x=alt.X(x_axis + ':Q', title=x_axis.replace('_', ' ').title()),
         y=alt.Y(y_axis + ':Q', title=y_axis.replace('_', ' ').title()),
