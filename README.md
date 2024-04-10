@@ -1,1 +1,4 @@
 # dataviz
+panel
+altair
+streamlit
