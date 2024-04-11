@@ -41,8 +41,8 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
         color=alt.condition(selection, alt.value('darkgreen'), alt.value('lightgray')),
         tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), alt.Tooltip(x_axis + ':Q', title=x_axis.replace('_', ' ').title()), alt.Tooltip(y_axis + ':Q', title=y_axis.replace('_', ' ').title()), 'streams:Q']
     ).properties(
-        width=250,
-        height=250,
+        width=300,
+        height=300,
         title='Song Analysis'
     ).add_selection(selection2)
 
@@ -55,7 +55,7 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
         color=alt.condition(selection, alt.value('darkgreen'), alt.value('lightgray')),
         tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), alt.Tooltip('Value:Q', title='Metric'), 'streams:Q']
     ).properties(
-        width=350,
+        width=400,
         height=200
     )
 
