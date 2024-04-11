@@ -12,6 +12,11 @@ def get_data():
     spotify_filtered.loc[:, 'in_deezer_playlists'] = spotify_filtered['in_deezer_playlists'].str.replace(',', '').astype(int)
     spotify_filtered = spotify_filtered.sort_values('streams', ascending=False)
     spotify_filtered = spotify_filtered.head(100)
+    spotify_filtered['track_name'] = spotify_filtered['track_name'].str.replace("ï¿½ï¿½o", "ñorita")
+    spotify_filtered['track_name'] = spotify_filtered['track_name'].str.replace("ï¿½ï¿½ne", "aneskin")
+    spotify_filtered['track_name'] = spotify_filtered['track_name'].str.replace("ï¿½ï¿½reo", "éreo")
+    spotify_filtered['track_name'] = spotify_filtered['track_name'].str.replace("ï¿½", "ON")
+    spotify_filtered['track_name'] = spotify_filtered['track_name'].str.replace("ï¿", "O")
     return spotify_filtered
 
 # Chart Creation
@@ -53,7 +58,7 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
         x=alt.X('Value:Q', title='Value'),
         y=alt.Y('Metric:N', title=None, sort='-x'),
         color=alt.condition(selection, alt.value('darkgreen'), alt.value('lightgray')),
-        opacity=alt.condition(selection2, alt.value(1.0), alt.value(0.4)),
+        opacity=alt.condition(selection2, alt.value(1.0), alt.value(0.3)),
         tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), alt.Tooltip('Value:Q', title='Metric'), 'streams:Q']
     ).properties(
         width=400,
