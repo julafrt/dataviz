@@ -25,12 +25,12 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
     selection2 = alt.selection_interval()
 
     chart = alt.Chart(top_n_songs).mark_bar().encode(
-        x=alt.X('streams:Q',title="Number of streams"),
-        y=alt.Y('track_name:N', title='Track Names', sort='-x'),
-        color=alt.condition(selection, alt.value('dimgray'), alt.value('lightgray')),
+        x='streams:Q',
+        y=alt.Y('track_name:N', sort='-x'),
+        color=alt.condition(selection, alt.value('darkgreen'), alt.value('lightgray')),
         tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), 'streams:Q', alt.Tooltip('in_spotify_playlists:Q', title='In Spotify Playlists')]
     ).properties(
-        width=300,
+        width=250,
         height=500,
         title=f'Top {max_range} Songs Streaming Ranking'
     ).add_selection(selection).transform_filter(selection2)
@@ -63,7 +63,7 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
         ['in_spotify_playlists', 'in_apple_playlists', 'in_deezer_playlists'],
         as_=['Metric', 'Value']
     ).encode(
-        x=alt.X('sum(Value):Q', stack="normalize", title='Percentage of repartition of presence in the song', axis=alt.Axis(format='%')),
+        x=alt.X('sum(Value):Q', stack="normalize", axis=alt.Axis(format='%')),
         y=alt.Y(
             'track_name:N',
             title='Track Names',
@@ -82,7 +82,7 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
             ), alt.value('lightgray')
         )
     ).properties(
-        width=300,
+        width=250,
         height=500,
         title='Importance of Platforms for Songs'
     ).transform_filter(selection2).add_selection(selection)    
@@ -132,7 +132,7 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
         title='Mode Distribution'
     ).transform_filter(selection).transform_filter(selection2)
 
-    return (chart | platform)&(modes | pie_chart)&(scatter_base | dots)
+    return (chart | platform) & (modes | pie_chart) & (scatter_base | dots)
 
 # Main App
 def main():
