@@ -78,7 +78,7 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
                     domain=['in_spotify_playlists', 'in_apple_playlists', 'in_deezer_playlists'],
                     range=['darkgreen', 'crimson', 'MediumOrchid']
                 ),
-                title='Metrics', legend=alt.Legend(padding=-50)
+                title='Metrics', legend=alt.Legend(legendX=500)
             ), alt.value('lightgray')
         )
     ).properties(
