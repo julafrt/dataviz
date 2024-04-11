@@ -25,8 +25,8 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
     selection2 = alt.selection_interval()
 
     chart = alt.Chart(top_n_songs).mark_bar().encode(
-        x='streams:Q',
-        y=alt.Y('track_name:N', sort='-x'),
+        x=alt.X('streams:Q',title='Number of streams'),
+        y=alt.Y('track_name:N', sort='-x', title='Track Names'),
         color=alt.condition(selection, alt.value('darkgreen'), alt.value('lightgray')),
         tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), 'streams:Q', alt.Tooltip('in_spotify_playlists:Q', title='In Spotify Playlists')]
     ).properties(
