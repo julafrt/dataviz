@@ -78,7 +78,7 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
                     domain=['in_spotify_playlists', 'in_apple_playlists', 'in_deezer_playlists'],
                     range=['darkgreen', 'crimson', 'MediumOrchid']
                 ),
-                title='Metrics', legend=alt.Legend(legendX=250)
+                title='Metrics', legend=alt.Legend(legendX=300)
             ), alt.value('lightgray')
         )
     ).properties(
@@ -146,11 +146,18 @@ def main():
 
     # Interactive Controls
     songs_count_selector = st.slider('Top Songs', 0, 100, (0, 25), key='top_songs')
+
+    col1, col2 = st.columns(3)
+
+    with col1:
+
     x_axis = st.selectbox('X-Axis', ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%'], key='x_axis')
+    
+    with col2:
     y_axis = st.selectbox('Y-Axis', ['valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%','danceability_%'], key='y_axis')
 
     # Display Charts
-    st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis), use_container_width=False)
+    st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis), use_container_width=True)
 
 if __name__ == "__main__":
     main()
