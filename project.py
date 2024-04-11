@@ -53,6 +53,7 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
         x=alt.X('Value:Q', title='Value'),
         y=alt.Y('Metric:N', title=None, sort='-x'),
         color=alt.condition(selection, alt.value('darkgreen'), alt.value('lightgray')),
+        opacity=alt.condition(selection2, alt.value(1.0), alt.value(0.4)),
         tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), alt.Tooltip('Value:Q', title='Metric'), 'streams:Q']
     ).properties(
         width=400,
