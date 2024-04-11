@@ -147,7 +147,7 @@ def main():
     # Interactive Controls
     songs_count_selector = st.slider('Top Songs', 0, 100, (0, 25), key='top_songs')
 
-    col1, col2 = st.columns(3)
+    col1, col2 = st.columns(2)
 
     with col1:
         x_axis = st.selectbox('X-Axis', ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%'], key='x_axis')
