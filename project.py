@@ -30,7 +30,7 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
         color=alt.condition(selection, alt.value('darkgreen'), alt.value('lightgray')),
         tooltip=[alt.Tooltip('track_name:N', title='Track Name'), alt.Tooltip('artist(s)_name:N', title='Artist(s) Name'), 'streams:Q', alt.Tooltip('in_spotify_playlists:Q', title='In Spotify Playlists')]
     ).properties(
-        width=250,
+        width=300,
         height=500,
         title=f'Top {max_range} Songs Streaming Ranking'
     ).add_selection(selection).transform_filter(selection2)
@@ -63,7 +63,7 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
         ['in_spotify_playlists', 'in_apple_playlists', 'in_deezer_playlists'],
         as_=['Metric', 'Value']
     ).encode(
-        x=alt.X('sum(Value):Q', stack="normalize", axis=alt.Axis(format='%')),
+        x=alt.X('sum(Value):Q', stack="normalize", axis=alt.Axis(format='%'), title='Percentage of repartition'),
         y=alt.Y(
             'track_name:N',
             title='Track Names',
@@ -82,7 +82,7 @@ def plot_top_songs(spotify_filtered, top_range=(0, 25), x_axis='energy_%', y_axi
             ), alt.value('lightgray')
         )
     ).properties(
-        width=250,
+        width=300,
         height=500,
         title='Importance of Platforms for Songs'
     ).transform_filter(selection2).add_selection(selection)    
