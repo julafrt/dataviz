@@ -4,7 +4,7 @@ import altair as alt
 
 def get_data():
     url="https://tinyurl.com/y822sfzy"
-    df = pd.read_csv("https://tinyurl.com/y822sfzy", encoding='UTF-8')
+    df = pd.read_csv("https://tinyurl.com/y822sfzy", encoding='latin-1')
     spotify_cleaned = df.dropna()
     spotify_filtered = spotify_cleaned.loc[spotify_cleaned['streams'].str.isnumeric(), :]
     spotify_filtered.loc[:, 'streams'] = spotify_filtered['streams'].astype(int)
