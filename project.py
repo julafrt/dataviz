@@ -13,8 +13,8 @@ def get_data():
     spotify_filtered = spotify_filtered.sort_values('streams', ascending=False)
     spotify_filtered = spotify_filtered.head(100)
     spotify_filtered['track_name'] = spotify_filtered['track_name'].str.replace("ï¿½ï¿½o", "ñorita")
-    spotify_filtered['track_name'] = spotify_filtered['track_name'].str.replace("ï¿½ï¿½ne", "aneskin")
-    spotify_filtered['track_name'] = spotify_filtered['track_name'].str.replace("ï¿½ï¿½reo", "éreo")
+    spotify_filtered['artist(s)_name'] = spotify_filtered['artist(s)_name'].str.replace("ï¿½ï¿½ne", "aneskin")
+    spotify_filtered['artist(s)_name'] = spotify_filtered['artist(s)_name'].str.replace("ï¿½ï¿½reo", "éreo")
     spotify_filtered['track_name'] = spotify_filtered['track_name'].str.replace("ï¿½", "ON")
     spotify_filtered['track_name'] = spotify_filtered['track_name'].str.replace("ï¿", "O")
     return spotify_filtered
