@@ -156,14 +156,17 @@ def main():
     spotify_filtered = get_data()
 
     # Interactive Controls
+    st.write("Select the range of the top 100 songs you want to visualize :")
     songs_count_selector = st.slider('Top Songs', 0, 100, (0, 25), key='top_songs')
 
     col1, col2 = st.columns(2)
 
     with col1:
+        st.write("Select the X Axis of the detailed analyis : ")
         x_axis = st.selectbox('X-Axis', ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%'], key='x_axis')
     
     with col2:
+        st.write("Select the Y Axis of the detailed analyis : ")
         y_axis = st.selectbox('Y-Axis', ['valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%','danceability_%'], key='y_axis')
 
     # Display Charts
