@@ -145,7 +145,7 @@ def main():
     st.set_page_config(
         page_title="Top 100 Spotify Music Analysis", page_icon="🎵", layout="wide"
     )
-    st.title('Top 100 Spotify Music Analysis')
+    st.title('🎵 Top 100 Spotify Music Analysis')
 
     body = "Nowadays, music streaming has played a very important role in young people’s entertainment life. Along with the platforms, the music streaming market worldwide is projected to reach a revenue of US$29.60bn in 2024 with a revenue growth rate at 14.6%, according to Statista. Among the multitude of platforms available, Spotify stands out as one of the most popular music streaming services. Our website attempts to explore the essence of what makes songs famous to the top of Spotify's charts in 2023, comparing their popularity across various platforms. Through insightful visualizations, we aim to assist industry experts in crafting the next big hits for business growth, while also guiding music enthusiasts to discover songs with similar characteristics to their favorites. Join us in exploring the heartbeat of today's music scene !"
 
@@ -167,6 +167,7 @@ def main():
         y_axis = st.selectbox('Y-Axis', ['valence_%', 'energy_%', 'acousticness_%', 'liveness_%', 'speechiness_%','danceability_%'], key='y_axis')
 
     # Display Charts
+    st.divider()
     st.altair_chart(plot_top_songs(spotify_filtered, songs_count_selector, x_axis, y_axis), use_container_width=True)
 
 if __name__ == "__main__":
