@@ -1,3 +1,2 @@
 altair
-panel
 streamlit
