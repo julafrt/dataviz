@@ -1,4 +1,0 @@
-# dataviz
-panel
-altair
-streamlit
